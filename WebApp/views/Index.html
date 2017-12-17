@@ -1,0 +1,147 @@
+﻿
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Trip Sorter</title>
+	
+	<script src="../public/javascripts/react.js"></script>
+    <script src="../public/javascripts/react-dom.js"></script>
+    <script src="../public/javascripts/browser.js"></script>
+    <script src="../public/javascripts/jquery-3.2.1.js"></script>
+    <script src="../public/javascripts/bootstrap.min.js"></script>
+    <script src="../public/javascripts/TripSorter.js"></script>
+    <script src="../models/response.js"></script>
+	
+    <!-- Bootstrap core CSS -->
+    <link href="../public/stylesheets/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Custom styles for this template -->
+    <link href="../public/stylesheets/jumbotron.css" rel="stylesheet" />
+    <link href="../public/stylesheets/TripSorter.css" rel="stylesheet" />
+</head>
+
+<body>
+
+	<div id="dvContainer"></div>
+	
+	<script type="text/babel">
+		var Container = React.createClass({
+			getInitialState : function(){
+				return{
+					TripsSorter: [{}]
+				}
+			},
+			fillLocTo: function(){
+				var toLoc = fromLoc.slice();
+				toLoc.splice(toLoc.indexOf($.trim($("#ddlFrom option:selected").text())), 1);
+				$('.ddlTo').find('option').remove().end().append('<option>Trip To (Arrive At)</option>');
+				$.each(toLoc, function (key, val) {
+					$(".ddlTo").append("<option value=\"" + $.trim(val) + "\">" + $.trim(val) + "</option>");
+				});
+			},
+			setSortBy: function(e){
+				strSortBy=e.target.value;
+			},
+            search: function(){
+                if ($.trim($("#ddlFrom option:selected").text()) !== 'Trip From (Depart From)' && $.trim($("#ddlTo option:selected").text()) !== 'Trip To (Arrive At)')
+                {
+                    if($.trim($("#ddlFrom option:selected").text()) === steDeparture &&  $.trim($("#ddlTo option:selected").text())===strArrival)
+                    {
+                        $('.dvTripWrapper').empty();
+                    }
+
+                    if(strSortBy!="")
+                        tripFinder();
+                    else
+                        alert('Please select the search option (Cheapest/Fastest)');
+                  }
+               else
+                    alert('Please select the trip')
+            },
+            reset: function(){
+                reset();
+            },
+			renderContainer: function(){
+				return (
+						<div className="container"> 
+							<nav className="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+								<div className="collapse navbar-collapse" id="navbarsExampleDefault">
+									<ul className="navbar-nav mr-auto">
+										<li className="nav-item active">
+											<a className="nav-link" href="#">Home <span className="sr-only">(current)</span></a>
+										</li>
+										<li className="nav-item">
+											<a className="nav-link" href="#">About Us</a>
+										</li>
+										<li className="nav-item">
+											<a className="nav-link" href="#">Contact Us</a>
+										</li>
+									</ul>
+								</div>
+							</nav>
+							<main role="main">
+								<div className="jumbotron">
+									<div className="container">
+
+										<h1 className="display-3">Trip Sorter</h1>
+										<p>
+											<select id="ddlFrom" onChange={this.fillLocTo} className="ddlFrom select">
+												<option value="0">Trip From (Depart From)</option>
+											</select>
+
+											<select id="ddlTo" className="ddlTo select">
+												<option value="0">Trip To (Arrive At)</option>
+											</select>
+										</p>
+										<p>
+											<div className="col-md-3 component" onChange={this.setSortBy}>
+												<label class="radio-inline">
+													<input type="radio" name="optradio" value="COST" className="rdSortBy" /><b>Cheapest</b>
+												</label>
+												
+												<label class="radio-inline">
+													<input type="radio" name="optradio"  value="FAST" className="rdSortBy" /><b>Fastest</b>
+												</label>
+											</div>
+										</p>
+										<p><a onClick={this.search} className="btn btn-primary btn-lg" href="#" role="button">Search &raquo;</a></p>
+									</div>
+								</div>
+								<div className="container">
+									<div className="dvTripWrapper container">
+                                       
+									</div>
+									<br />
+								</div>
+								
+								<div className="container">
+									<div className="col-md-7 wrapper">
+										<div className="component-init">Total : <span id="spnHr">0</span>h <span id="spnM">0</span>m  <span id="spnTot">0</span>€</div>
+									</div>
+                                    <br />
+									<p><a onClick={this.reset} className="btn btn-success btn-lg" href="#" role="button">Reset &raquo;</a></p>
+								</div>
+							</main>
+							
+							<footer class="container">
+								<p>&copy; M.Shuaib 2017, All right reserved</p>
+							</footer>
+						</div>
+					
+				);
+			},
+			render : function(){
+						return (this.renderContainer());
+			}
+		});				
+						
+		ReactDOM.render(<Container />, document.getElementById('dvContainer'));
+		
+	</script>
+</body>
+</html>
